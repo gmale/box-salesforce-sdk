@@ -11,9 +11,26 @@ be for an enterprise user.
 How to Authenticate
 -------------------
 * [Create your API key.][box-platform]
+```
+This refers to creating a new app, set OAuth with JWT and follow https://developer.box.com/v2.0/docs/authentication-with-jwt
+```
 * [Generate your RSA Keypair][rsa-generation] (take note of your Key ID that Box generates for you)
-* Salesforce doesn't handle encrypted private keys so you have to run `openssl pkcs8 -topk8 -nocrypt -in your_private_key.pem -outform PEM` in your terminal.
-* Remove all whitespace (new lines), the `-----BEGIN PRIVATE KEY-----`, and the `-----END PRIVATE KEY-----`.  This final value will be the private key you use to authenticate.
+```
+openssl genrsa -aes256 -out private_key.pem 2048
+openssl rsa -pubout -in private_key.pem -out public_key.pem
+```
+* Salesforce doesn't handle encrypted private keys so you have to run `openssl pkcs8 -topk8 -nocrypt -in your_private_key.pem -outform PEM` in your terminal:
+```
+openssl pkcs8 -topk8 -nocrypt -in private_key.pem -out decryptedkey.pem
+```
+* Remove all whitespace (new lines), the `-----BEGIN PRIVATE KEY-----`, and the `-----END PRIVATE KEY-----`.  This final value will be the private key you use to authenticate:
+```
+awk 'NF {sub(/\r/, ""); printf "%s",$0;}' decryptedkey.pem
+```
+* If you want to keep the new lines but remove whitespace:
+```
+awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}' decryptedkey.pem
+```
 
 The following example creates an enterprise Platform API connection:
 
