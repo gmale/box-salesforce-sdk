@@ -23,7 +23,7 @@ openssl rsa -pubout -in private_key.pem -out public_key.pem
 ```
 openssl pkcs8 -topk8 -nocrypt -in private_key.pem -out decryptedkey.pem
 ```
-* Remove all whitespace (new lines), the `-----BEGIN PRIVATE KEY-----`, and the `-----END PRIVATE KEY-----`.  This final value will be the private key you use to authenticate:
+* Remove all whitespace (new lines) with the command below, copy the decrypted key without the `-----BEGIN PRIVATE KEY-----`, and the `-----END PRIVATE KEY-----`.  This final value will be the private key you use to authenticate:
 ```
 awk 'NF {sub(/\r/, ""); printf "%s",$0;}' decryptedkey.pem
 ```
